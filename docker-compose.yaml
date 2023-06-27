@@ -2,15 +2,18 @@ version: "3.9"
 
 services:
   front:
-    image: sermalenk/skypro-front:lesson-38
+    image: sermalenk/skypro-front:lesson-34
     ports:
-      - "8080:80"
+      - "80:80"
     depends_on:
       api:
         condition: service_started
 
   api:
     build: .
+    env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres
     depends_on:
       postgres:
         condition: service_healthy
@@ -19,15 +22,15 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./core:/opt/app/core/
-      - ./todolist:/opt/app/todolist/
+      - ./todolist/:/app/
 
   migrations:
     build: .
+    env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres
     depends_on:
       - postgres
-    volumes:
-      - todoapp_data/migrations/data/
     command: python manage.py migrate
 
   postgres:
@@ -40,9 +43,12 @@ services:
     healthcheck:
       test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
       interval: 5s
-      timeout: 30s
+      timeout: 3s
       retries: 10
     ports:
       - "5432:5432"
     volumes:
-      - todoapp_data/postgresql/data/
+      - todoapp_data:/var/lib/postgresql/data/
+
+volumes:
+  todoapp_data:
