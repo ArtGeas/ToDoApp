@@ -38,5 +38,22 @@ jobs:
           source: "deploy/*"
           target: "todoapp"
           strip_components: 1
-
-
+      - name: Run compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          stript: |
+            cd todoapp
+            docker compose pull
+            docker compose down
+            docker compose up -d
+      - name: Clean Up
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          stript: |
+            docker system prune -f -a
