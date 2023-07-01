@@ -18,12 +18,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      migrations:
-         condition: service_completed_successfully
     ports:
       - "8000:8000"
     volumes:
       - ./todolist/:/app/
+    command: > 
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py migrate &&
+             python manage.py runserver"
 
   migrations:
     build: .
