@@ -24,8 +24,7 @@ services:
     depends_on:
       - postgres
     command: >
-      python manage.py migrate &&
-      ["./wait-for-it.sh", "db:5432", "--", "python", "app.py"]
+      python manage.py migrate 
 
   postgres:
     image: postgres:latest
