@@ -2,7 +2,7 @@ from rest_framework import serializers, exceptions
 from django.contrib.auth.hashers import make_password
 
 from models import User
-from todolist.todolist.fields import PasswordField
+from todolist.fields import PasswordField
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
