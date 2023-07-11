@@ -1,13 +1,13 @@
 from rest_framework import serializers, exceptions
 from django.contrib.auth.hashers import make_password
 
-from models import User
+from .models import User
 from todolist.fields import PasswordField
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
     password = PasswordField()
-    password_repeat = PasswordField()
+    password_repeat = PasswordField(validate=False)
 
     class Meta:
         model = User
@@ -23,3 +23,14 @@ class CreateUserSerializer(serializers.ModelSerializer):
         validated_data['password'] = make_password(validated_data['password'])
 
         super().create(validated_data)
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = PasswordField(validate=False)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
