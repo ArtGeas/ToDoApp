@@ -1,7 +1,7 @@
 from rest_framework import serializers, exceptions
 from django.contrib.auth.hashers import make_password
 
-from .models import User
+from core.models import User
 from todolist.fields import PasswordField
 
 
@@ -35,7 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
-class UpdatePasswordSerializer(serializers.ModelSerializer):
+class UpdatePasswordSerializer(serializers.Serializer):
     old_password = PasswordField(validate=False)
     new_password = PasswordField()
 
