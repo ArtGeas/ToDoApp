@@ -8,9 +8,6 @@ services:
     depends_on:
       api:
         condition: service_started
-    volumes:
-      - .deploy/nginx.conf:/etc/nginx/conf.d/default.conf
-      - django_static:/usr/share/nginx/html/static/
 
   api:
     image: ${DOCKERHUB_USER}/todoapp:latest
@@ -45,4 +42,3 @@ services:
 
 volumes:
   todoapp_data:
-  django_static:
