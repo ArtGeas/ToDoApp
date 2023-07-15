@@ -45,3 +45,4 @@ services:
 
 volumes:
   todoapp_data:
+  django_static:
