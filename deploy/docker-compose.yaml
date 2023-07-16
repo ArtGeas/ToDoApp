@@ -12,15 +12,23 @@ services:
   api:
     image: ${DOCKERHUB_USER}/todoapp:latest
     env_file: .env
+    environment:
+      POSTGRES_HOST: postgres
+      DEBUG: True
     depends_on:
       postgres:
         condition: service_healthy
-      migrations:
-         condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./todolist/:/app/
+    command: python manage.py runserver 0.0.0.0:8000
 
   migrations:
     image: ${DOCKERHUB_USER}/todoapp:latest
     env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres
     depends_on:
       postgres:
         condition: service_healthy
@@ -28,6 +36,7 @@ services:
 
   postgres:
     image: postgres:latest
+    env_file: .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -37,6 +46,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    ports:
+      - "5432:5432"
     volumes:
       - todoapp_data:/var/lib/postgresql/data/
 
