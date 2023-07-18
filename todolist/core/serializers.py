@@ -4,6 +4,11 @@ from django.contrib.auth.hashers import make_password
 from core.models import User
 from todolist.fields import PasswordField
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 
 class CreateUserSerializer(serializers.ModelSerializer):
     password = PasswordField()
