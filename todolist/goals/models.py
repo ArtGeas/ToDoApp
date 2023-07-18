@@ -12,8 +12,8 @@ class GoalCategory(models.Model):
     title = models.CharField(verbose_name="Название", max_length=255)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
-    created = models.DateTimeField(verbose_name="Дата создания")
-    updated = models.DateTimeField(verbose_name="Дата последнего обновления")
+    created = models.DateTimeField(verbose_name="Дата создания", blank=True)
+    updated = models.DateTimeField(verbose_name="Дата последнего обновления", blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
