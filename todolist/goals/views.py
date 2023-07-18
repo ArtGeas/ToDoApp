@@ -1,3 +1,11 @@
 from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+from goals.model import GoalCategory
+from goals.serializers import GoalCategorySerializer
+
+class GoalCategoryCreateView(CreateAPIView):
+    model = GoalCategory
+    permission_classes = [IsAuthenticated]
+    serializer_class = GoalCategorySerializer
