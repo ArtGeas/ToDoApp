@@ -67,6 +67,9 @@ class GoalListView(ListAPIView):
     ordering_fields = ['title', 'created', 'category', 'priority', 'due_date']
     search_fields = ['title', 'description']
 
+    def get_queryset(self):
+        return Goal.objects.filter(user = self.request.user)
+
 
 class GoalView(RetrieveUpdateDestroyAPIView):
     model = Goal
@@ -76,4 +79,3 @@ class GoalView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Goal.objects.filter(user = self.request.user)
 
-    # ?? perform_destroy and field is_deleted
