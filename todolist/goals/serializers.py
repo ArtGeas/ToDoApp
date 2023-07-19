@@ -27,8 +27,8 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Goal
-        fields = '__all__'
-        read_only_fields = ('category', 'title', 'description', 'due_date', 'status', 'priority', 'created', 'updated')
+        fields = ('category', 'title', 'description', 'due_date', 'status', 'priority')
+        read_only_fields = ('category', 'title', 'description', 'due_date', 'status', 'priority')
 
     def validate_category(self, value):
         if value.is_deleted:
@@ -46,5 +46,5 @@ class GoalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Goal
-        fields = '__all__'
-        read_only_fields = ('category', 'title', 'description', 'due_date', 'status', 'priority', 'created', 'updated')
+        fields = ('id', 'user', 'created', 'updated', 'title', 'description', 'due_date', 'status', 'priority', 'category')
+        read_only_fields = ('id', 'user', 'created', 'updated', 'title', 'description', 'due_date', 'status', 'priority', 'category')
