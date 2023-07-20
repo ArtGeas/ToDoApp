@@ -68,7 +68,7 @@ class GoalListView(ListAPIView):
     search_fields = ['title', 'description']
 
     def get_queryset(self):
-        return Goal.objects.filter(user = self.request.user)
+        return Goal.objects.filter(user = self.request.user, category__is_deleted=False)
 
 
 class GoalView(RetrieveUpdateDestroyAPIView):
