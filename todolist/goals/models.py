@@ -4,6 +4,19 @@ from django.utils import timezone
 from core.models import User
 
 
+class DatesModelMixin(models.Model):
+    abstract = True
+
+    created = models.DateTimeField(verbose_name="Дата создания", blank=True)
+    updated = models.DateTimeField(verbose_name="Дата последнего обновления", blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created = timezone.now()
+        self.updated = timezone.now()
+        return super().save(*args, **kwargs)
+
+
 class Status(models.IntegerChoices):
     to_do = 1, 'К выполнению'
     in_progress = 2, 'В процессе'
@@ -18,7 +31,7 @@ class Priority(models.IntegerChoices):
     critical = 4, 'Критический'
 
 
-class GoalCategory(models.Model):
+class GoalCategory(DatesModelMixin):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
@@ -26,17 +39,9 @@ class GoalCategory(models.Model):
     title = models.CharField(verbose_name="Название", max_length=255)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
-    created = models.DateTimeField(verbose_name="Дата создания", blank=True)
-    updated = models.DateTimeField(verbose_name="Дата последнего обновления", blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.created = timezone.now()
-        self.updated = timezone.now()
-        return super().save(*args, **kwargs)
 
 
-class Goal(models.Model):
+class Goal(DatesModelMixin):
     class Meta:
         verbose_name = 'Цель'
         verbose_name_plural = 'Цели'
@@ -48,17 +53,9 @@ class Goal(models.Model):
     status = models.PositiveSmallIntegerField(choices=Status.choices, default=Status.to_do, verbose_name="Статус")
     priority = models.PositiveSmallIntegerField(choices=Priority.choices, default=Priority.medium, verbose_name="Приоритет")
     due_date = models.DateTimeField(verbose_name="Дата дедлайна")
-    created = models.DateTimeField(verbose_name="Дата создания", blank=True)
-    updated = models.DateTimeField(verbose_name="Дата последнего обновления", blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.created = timezone.now()
-        self.updated = timezone.now()
-        return super().save(*args, **kwargs)
 
 
-class GoalComment(models.Model):
+class GoalComment(DatesModelMixin):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
@@ -66,11 +63,3 @@ class GoalComment(models.Model):
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE, verbose_name='Цель')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     text = models.TextField(verbose_name='Текст комментария')
-    created = models.DateTimeField(verbose_name='Дата создания', blank=True)
-    updated = models.DateTimeField(verbose_name='Дата последнего обновления', blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.created = timezone.now()
-        self.updated = timezone.now()
-        return super().save(*args, **kwargs)
