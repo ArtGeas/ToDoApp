@@ -5,7 +5,8 @@ from core.models import User
 
 
 class DatesModelMixin(models.Model):
-    abstract = True
+    class Meta:
+        abstract = True
 
     created = models.DateTimeField(verbose_name="Дата создания", blank=True)
     updated = models.DateTimeField(verbose_name="Дата последнего обновления", blank=True)
