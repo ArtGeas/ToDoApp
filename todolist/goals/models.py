@@ -61,6 +61,6 @@ class GoalComment(DatesModelMixin):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
-    goal = models.ForeignKey(Goal, on_delete=models.CASCADE, verbose_name='Цель')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+    goal = models.ForeignKey(Goal, on_delete=models.PROTECT, verbose_name='Цель')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор')
     text = models.TextField(verbose_name='Текст комментария')
