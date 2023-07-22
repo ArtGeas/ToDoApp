@@ -15,7 +15,6 @@ class GoalCategoryCreateView(CreateAPIView):
 
 
 class GoalCategoryListView(ListAPIView):
-    model = GoalCategory
     permission_classes = [IsAuthenticated]
     serializer_class = GoalCategorySerializer
     pagination_class = LimitOffsetPagination
@@ -33,7 +32,6 @@ class GoalCategoryListView(ListAPIView):
 
 
 class GoalCategoryView(RetrieveUpdateDestroyAPIView):
-    model = GoalCategory
     serializer_class = GoalCategorySerializer
     permission_classes = [IsAuthenticated]
 
@@ -54,7 +52,6 @@ class GoalCreateView(CreateAPIView):
 
 
 class GoalListView(ListAPIView):
-    model = Goal
     serializer_class = GoalSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = LimitOffsetPagination
@@ -74,7 +71,6 @@ class GoalListView(ListAPIView):
 
 
 class GoalView(RetrieveUpdateDestroyAPIView):
-    model = Goal
     serializer_class = GoalSerializer
     permission_classes = [IsAuthenticated]
 
@@ -93,7 +89,6 @@ class GoalCommentCreateView(CreateAPIView):
 
 
 class GoalCommentListView(ListAPIView):
-    model = GoalComment
     serializer_class = GoalCommentSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = LimitOffsetPagination
