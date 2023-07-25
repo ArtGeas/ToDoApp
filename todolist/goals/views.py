@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from goals.models import GoalCategory, Goal, Status, GoalComment, Board
 from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, GoalSerializer, GoalCommentCreateSerializer, GoalCommentSerializer, BoardSerializer, BoardListSerializer
 from goals.filters import GoalDateFilter
-from goals.permissions import BoardPermissions
+from goals.permissions import BoardPermission
 
 class GoalCategoryCreateView(CreateAPIView):
     model = GoalCategory
@@ -113,7 +113,7 @@ class GoalCommentView(RetrieveUpdateDestroyAPIView):
 
 class BoardView(RetrieveUpdateDestroyAPIView):
     model = Board
-    permission_classes = [IsAuthenticated, BoardPermissions]
+    permission_classes = [IsAuthenticated, BoardPermission]
     serializer_class = BoardSerializer
 
     def get_queryset(self):
