@@ -125,3 +125,9 @@ class BoardSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
+
+
+class BoardListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields ='__all__'
