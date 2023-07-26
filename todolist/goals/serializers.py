@@ -1,10 +1,11 @@
 from django.db import transaction
 from rest_framework import serializers
-
+from rest_framework.exceptions import ValidationError, PermissionDenied
 
 from goals.models import GoalCategory, Goal, GoalComment, Status, Board, BoardParticipant
 from core.models import User
 from core.serializers import UserSerializer
+
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -17,6 +18,19 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
 
 class GoalCategorySerializer(GoalCategoryCreateSerializer):
     user = UserSerializer(read_only=True)
+
+    def validate_board(self, board: Board) -> Board:
+        if board.is_deleted:
+            raise ValidationError('Board do not exists')
+        if not BoardParticipant.objects.filter(
+            board_id=board.id,
+            user_id=self.context['request'].user,
+            role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer]
+        ).exists():
+
+            raise PermissionDenied
+
+        return board
 
 
 class GoalCreateSerializer(serializers.ModelSerializer):
@@ -41,6 +55,18 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 class GoalSerializer(GoalCreateSerializer):
     user = UserSerializer(read_only=True)
 
+    def validate_category(self, category: GoalCategory) -> GoalCategory:
+        if category.is_deleted:
+            raise ValidationError('Category do not exists')
+        if not BoardParticipant.objects.filter(
+            board_id=category.board_id,
+            user_id=self.context['request'].user,
+            role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer]
+        ).exists():
+            raise PermissionDenied
+
+        return category
+
 
 class GoalCommentCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -50,13 +76,17 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'user')
 
-    def validate_goal(self, value):
-        if value.status == Status.archived:
-            raise serializers.ValidationError('The goal do not exists')
-        if value.user != self.context['request'].user:
-                raise serializers.ValidationError('not owner of the goal')
-        return value
+    def validate_goal(self, goal: Goal) -> Goal:
+        if goal.status == Status.archived:
+            raise ValidationError('Goal do not exists')
+        if not BoardParticipant.objects.filter(
+                board_id=goal.category.board_id,
+                user_id=self.context['request'].user,
+                role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer]
+        ).exists():
+            raise PermissionDenied
 
+        return goal
 
 class GoalCommentSerializer(GoalCommentCreateSerializer):
     user = UserSerializer(read_only=True)
@@ -73,7 +103,7 @@ class BoardCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.pop('user')
-        board =  Board.objects.created(**validated_data)
+        board =  Board.objects.create(**validated_data)
         BoardParticipant.objects.create(
             user=user, board=board, role=BoardParticipant.Role.owner
         )

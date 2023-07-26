@@ -6,7 +6,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 
 from goals.models import GoalCategory, Goal, Status, GoalComment, Board
-from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, GoalSerializer, GoalCommentCreateSerializer, GoalCommentSerializer, BoardSerializer, BoardListSerializer
+from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, GoalSerializer, GoalCommentCreateSerializer, GoalCommentSerializer, BoardSerializer, BoardListSerializer, BoardCreateSerializer
 from goals.filters import GoalDateFilter
 from goals.permissions import BoardPermission
 
@@ -29,8 +29,9 @@ class GoalCategoryListView(ListAPIView):
     search_fields = ["title"]
     def get_queryset(self):
         return GoalCategory.objects.filter(
-            user=self.request.user, is_deleted=False
-        )
+            board__participants__user=self.request.user,
+
+        ).exclude(is_deleted=True)
 
 
 class GoalCategoryView(RetrieveUpdateDestroyAPIView):
@@ -68,8 +69,9 @@ class GoalListView(ListAPIView):
     search_fields = ['title', 'description']
 
     def get_queryset(self):
-        return Goal.objects.filter(user = self.request.user,
-                                   category__is_deleted=False).exclude(status=Status.archived)
+        return Goal.objects.filter(
+            category__board__participants__user=self.request.user,
+            category__is_deleted=False).exclude(status=Status.archived)
 
 
 class GoalView(RetrieveUpdateDestroyAPIView):
@@ -102,7 +104,9 @@ class GoalCommentListView(ListAPIView):
     ordering = ['-created']
 
     def get_queryset(self):
-        return GoalComment.objects.select_related('user').filter(user = self.request.user)
+        return GoalComment.objects.filter(
+            goal__category__board__participants__user=self.request.user
+        )
 
 
 class GoalCommentView(RetrieveUpdateDestroyAPIView):
@@ -110,10 +114,15 @@ class GoalCommentView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = GoalComment.objects.select_related('user')
 
+    def get_queryset(self):
+        return GoalComment.objects.select_related("user").filter(
+            goal__category__board__participants__user=self.request.user
+        )
+
 
 class BoardCreateView(CreateAPIView):
     model = Board
-    serializer_class = BoardSerializer
+    serializer_class = BoardCreateSerializer
     permission_classes = [IsAuthenticated]
 
 
