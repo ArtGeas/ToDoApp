@@ -111,6 +111,12 @@ class GoalCommentView(RetrieveUpdateDestroyAPIView):
     queryset = GoalComment.objects.select_related('user')
 
 
+class BoardCreateView(CreateAPIView):
+    model = Board
+    serializer_class = BoardSerializer
+    permission_classes = [IsAuthenticated]
+
+
 class BoardView(RetrieveUpdateDestroyAPIView):
     model = Board
     permission_classes = [IsAuthenticated, BoardPermission]
