@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from goals.models import GoalCategory, Goal, Status, GoalComment, Board
 from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, GoalSerializer, GoalCommentCreateSerializer, GoalCommentSerializer, BoardSerializer, BoardListSerializer, BoardCreateSerializer
-from goals.filters import GoalDateFilter
+from goals.filters import GoalDateFilter, GoalCategoryFilter
 from goals.permissions import BoardPermission
 
 class GoalCategoryCreateView(CreateAPIView):
@@ -21,9 +21,11 @@ class GoalCategoryListView(ListAPIView):
     serializer_class = GoalCategorySerializer
     pagination_class = LimitOffsetPagination
     filter_backends = [
+        DjangoFilterBackend,
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
+    filterset_class = GoalCategoryFilter
     ordering_fields = ["title", "created"]
     ordering = ["title"]
     search_fields = ["title"]
