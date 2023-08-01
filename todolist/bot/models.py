@@ -15,9 +15,9 @@ class TgUser(models.Model):
         return bool(self.user)
 
     @staticmethod
-    def _generate_verification_code(self) -> str:
+    def _generate_verification_code() -> str:
         return get_random_string(20)
 
     def update_verification_code(self) -> None:
-        self.verification_code = self.update_verification_code()
+        self.verification_code = self._generate_verification_code()
         self.save(update_fields=['verification_code'])

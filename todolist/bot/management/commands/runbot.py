@@ -1,5 +1,6 @@
 from django.core.management import BaseCommand
 
+from bot.models import TgUser
 from bot.tg.client import TgClient
 from bot.tg.schemas import Message
 
@@ -26,4 +27,16 @@ class Command(BaseCommand):
             tg_user.update_verification_code()
             self.tg_client.send_message(msg.chat.id, f'Verification code: {tg_user.verification_code}')
         else:
-            self.tg_client.send_message(msg.chat.id, 'You already verified') # TODO: обработка
+            self.handle_auth_user(tg_user, msg)
+
+    def handle_auth_user(self, tg_user: TgUser, msg: Message):
+        if msg.text.startswith('/'):
+            match msg.text:
+                case '/goals':
+                    ...
+                case '/create':
+                    ...
+                case '/cancel':
+                    ...
+        else:
+            ...
