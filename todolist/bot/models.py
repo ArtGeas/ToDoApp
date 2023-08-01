@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 
 from core.models import User
 
@@ -12,3 +13,11 @@ class TgUser(models.Model):
     @property
     def is_verified(self) -> bool:
         return bool(self.user)
+
+    @staticmethod
+    def _generate_verification_code(self) -> str:
+        return get_random_string(20)
+
+    def update_verification_code(self) -> None:
+        self.verification_code = self.update_verification_code()
+        self.save(update_fields=['verification_code'])
