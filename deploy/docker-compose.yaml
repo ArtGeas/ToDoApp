@@ -35,7 +35,7 @@ services:
       migrations:
         condition: service_completed_successfully
     volumes:
-      - ./bot:/app/bot/
+      - ./todolist/:/app/bot/
     command: python manage.py runbot
 
   postgres:
