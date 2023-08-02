@@ -34,6 +34,18 @@ services:
         condition: service_healthy
     command: python manage.py migrate
 
+  bot:
+    build: .
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    volumes:
+      - ./bot:/app/bot/
+    command: python manage.py runbot
+
   postgres:
     image: postgres:15.1-alpine
     env_file: .env
@@ -50,18 +62,6 @@ services:
       - "5432:5432"
     volumes:
       - todoapp_data:/var/lib/postgresql/data/
-
-  bot:
-    build: .
-    env_file: .env
-    depends_on:
-      postgres:
-        condition: service_healthy
-      migrations:
-        condition: service_completed_successfully
-    volumes:
-      - ./bot:/app/bot/
-    command: python manage.py runbot
 
 volumes:
   todoapp_data:
