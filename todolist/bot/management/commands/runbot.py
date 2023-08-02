@@ -1,6 +1,7 @@
 from django.core.management import BaseCommand
 
 from bot.models import TgUser
+from bot.tg.bot_logic import get_user_goals, show_categories
 from bot.tg.client import TgClient
 from bot.tg.schemas import Message
 
@@ -10,6 +11,7 @@ class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tg_client = TgClient()
+        self.user_data = {}
 
     def handle(self, *args, **options):
         offset = 0
@@ -33,10 +35,13 @@ class Command(BaseCommand):
         if msg.text.startswith('/'):
             match msg.text:
                 case '/goals':
-                    ...
+                    text = get_user_goals(tg_user.user.id)
                 case '/create':
-                    ...
+                    text = show_categories(user_id=tg_user.user.id, chat_id=msg.chat.id, users_data=self.user_data)
                 case '/cancel':
-                    ...
+                    if self.user_data[msg.chat.id]:
+                        del self.user_data[msg.chat.id]
+                    text = 'Creation cancelled'
         else:
-            ...
+            text = 'List of commands:\n/goals - Show your goals\n/create - Create a goal\n/cancel - Cancel creation'
+            self.tg_client.send_message(chat_id=msg.chat.id, text=text)
