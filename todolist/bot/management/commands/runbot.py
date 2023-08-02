@@ -4,13 +4,14 @@ from bot.models import TgUser
 from bot.tg.bot_logic import get_user_goals, show_categories
 from bot.tg.client import TgClient
 from bot.tg.schemas import Message
+from todolist.settings import BOT_TOKEN
 
 
 class Command(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.tg_client = TgClient()
+        self.tg_client = TgClient(BOT_TOKEN)
         self.user_data = {}
 
     def handle(self, *args, **options):
