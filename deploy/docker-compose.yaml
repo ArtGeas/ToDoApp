@@ -40,5 +40,17 @@ services:
     volumes:
       - todoapp_data:/var/lib/postgresql/data/
 
+  bot:
+    build: .
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    volumes:
+      - ./bot:/app/bot/
+    command: python manage.py runbot
+
 volumes:
   todoapp_data:
