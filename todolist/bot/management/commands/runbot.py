@@ -27,7 +27,7 @@ class Command(BaseCommand):
         tg_user, _ = TgUser.objects.get_or_create(chat_id=msg.chat.id, defaults={'username': msg.chat.username})
         if not tg_user.is_verified:
             tg_user.update_verification_code()
-            self.tg_client.send_message(msg.chat.id, f'Verification code: {tg_user.verification_code}')
+            self.tg_client.send_message(msg.chat.id, f'Confirm your account\n Verification code: {tg_user.verification_code}')
         else:
             self.handle_auth_user(tg_user, msg)
 
