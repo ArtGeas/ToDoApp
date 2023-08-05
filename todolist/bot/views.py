@@ -22,14 +22,14 @@ class VerificationView(APIView):
                 tg_user.save()
 
                 response_data = {
-                    'tg_id': tg_user.tg_id,
+                    'tg_id': tg_user.chat_id,
                     'username': tg_user.username,
                     'verification_code': tg_user.verification_code,
                     'user_id': tg_user.user_id,
                 }
 
                 client = TgClient(BOT_TOKEN)
-                client.send_message(chat_id=tg_user.tg_id, text='You are successfully verified!')
+                client.send_message(chat_id=tg_user.chat_id, text='You are successfully verified!')
 
                 return Response(response_data, status=status.HTTP_200_OK)
             else:

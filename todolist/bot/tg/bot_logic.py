@@ -47,7 +47,8 @@ def get_user_goals(user_id: int) -> str:
     response = '\n'.join(message)
     return response
 
-def show_categories(user_id: int, chat_id: int, users_data: dict[int, dict[str | int, ...]]) -> str:
+def show_categories(user_id: int, chat_id: int) -> str:
+    users_data = {}
 
     categories = (
         GoalCategory.objects.select_related('user')
@@ -75,7 +76,7 @@ def show_categories(user_id: int, chat_id: int, users_data: dict[int, dict[str |
     message = [f'{index}) {item.title}' for index, item in enumerate(data, start=1)]
 
     response = '\n'.join(message)
-    return 'Choose category for goal:\n' + response
+    return 'Choose category for goal:\n' + response, users_data
 
 def choose_category(**kwargs) -> str:
 

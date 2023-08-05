@@ -14,7 +14,7 @@ class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tg_client = TgClient(BOT_TOKEN)
-        self.user_data = {}
+        self.users_data = {}
 
     def handle(self, *args, **options):
         offset = 0
@@ -40,11 +40,21 @@ class Command(BaseCommand):
                 case '/goals':
                     text = get_user_goals(tg_user.user.id)
                 case '/create':
-                    text = show_categories(user_id=tg_user.user.id, chat_id=msg.chat.id, users_data=self.user_data)
+                    text, self.users_data = show_categories(user_id=tg_user.user.id, chat_id=msg.chat.id)
                 case '/cancel':
-                    if self.user_data[msg.chat.id]:
-                        del self.user_data[msg.chat.id]
-                    text = 'Creation cancelled'
+                    try:
+                        if self.users_data[msg.chat.id]:
+                            del self.users_data[msg.chat.id]
+                        text = 'Creation cancelled'
+                    except:
+                        text = 'Creation cancelled'
+                case _:
+                    text = 'Unknown command'
+        elif msg.chat.id in self.users_data:
+            next_handler = self.users_data[msg.chat.id].get('next_handler')
+            text = next_handler(
+                user_id=tg_user.user.id, chat_id=msg.chat.id, message=msg.text, users_data=self.users_data
+            )        
         else:
             text = 'List of commands:\n/goals - Show your goals\n/create - Create a goal\n/cancel - Cancel creation'
-            self.tg_client.send_message(chat_id=msg.chat.id, text=text)
+        self.tg_client.send_message(chat_id=msg.chat.id, text=text)
