@@ -3,19 +3,9 @@
 # ToDoApp
 Todo App is a user-friendly web-app that helps you stay organized and manage your tasks effectively. Create an account or log in to access your personalized dashboard. From there, you can easily create tasks, set due dates, and assign priorities.
 
-## Веб-приложение Планировщик задач
+## Web-app Task Scheduler
 
-__Стек__: Python,Django,Postgres
-
-
-Как запустить (установить зависимости, заполнить .env+какими значениями,
-накатить миграции, запустить проект)
-
-На локальном сервере:
-
-1.Запустить контейнер postgres
-2.Запустить django server
-3.Запустить остальные контейнеры
+__Stack__: Python,Django,Postgres
 
 ## Requirements
 
