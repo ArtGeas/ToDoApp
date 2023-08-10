@@ -1,7 +1,7 @@
 import pytest
 from django.test import Client
 
-from todolist.core.models import User
+from core.models import User
 
 @pytest.mark.django_db
 class TestUserLoginAuthentication:
