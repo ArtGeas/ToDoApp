@@ -1,15 +1,16 @@
-from factory import Faker
+import factory
 from factory.django import DjangoModelFactory
 
-from todolist.core.models import User
+from core.models import User
 
 
 class UserFactory(DjangoModelFactory):
+    username = factory.Faker('user_name')
+    password = factory.Faker('password')
+
     class Meta:
         model = User
 
-    username = Faker('user_name')
-    first_name = Faker('first_name')
-    last_name = Faker('last_name')
-    email = Faker('email')
-    password = Faker('password')
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs) -> User:
+        return User.objects.create_user(*args, **kwargs)
