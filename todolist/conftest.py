@@ -1,8 +1,8 @@
-# import pytest
-# from pytest_factoryboy import register
-# from django.test import Client
+import pytest
+from pytest_factoryboy import register
+from django.test import Client
 
-from .factories import UserFactory
+from .tests.factories import UserFactory
 
 # # Factories
 register(UserFactory)
