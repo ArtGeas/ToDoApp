@@ -18,3 +18,10 @@ __Stack__: Python,Django,Postgres
 ```bash
 sudo docker-compose up --build
 ```
+
+## Testing
+
+To run the tests, ensure that you have pytest installed in your virtual environment. If you don't have it, you can install it using:
+`pip install pytest pytest-django`
+
+Next, navigate to the root directory of your django project and execute: `pytest`

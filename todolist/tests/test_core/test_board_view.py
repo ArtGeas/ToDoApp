@@ -12,7 +12,6 @@ class LoginRequestFactory(factory.DictFactory):
 
 
 class BoardFactory(factory.DictFactory):
-    id = factory.Faker('random_int')
     title = factory.Faker('word')
     is_deleted = False
 
@@ -25,7 +24,6 @@ class TestBoardView:
         data = BoardFactory.build()
         response = auth_client.post(url, data=data)
         assert response.status_code == status.HTTP_201_CREATED
-
     
     def test_board_unlogin_create(self, client):
         url = '/goals/board/create'
@@ -33,15 +31,12 @@ class TestBoardView:
         response = client.post(url, data=data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-
     def test_board_list(self, auth_client):
         url = '/goals/board/list'
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
 
-
-    def test_board_by_id(self, auth_client):
-        board = BoardFactory.create()
-        url = f'/goals/board/{board["id"]}'
-        response = auth_client.get(url)
-        assert response.status_code == status.HTTP_200_OK
+    def test_unlogin_board_list(self, client):
+        url = '/goals/board/list'
+        response = client.get(url)
+        assert response.status_code == status.HTTP_403_FORBIDDEN

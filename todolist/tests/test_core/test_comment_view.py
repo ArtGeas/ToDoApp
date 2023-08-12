@@ -13,3 +13,9 @@ class TestCommentView:
         url = '/goals/goal_comment/list'
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
+
+    def test_unlogin_comment_list(self, client):
+        url = '/goals/goal_comment/list'
+        response = client.get(url)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        

@@ -13,3 +13,8 @@ class TestCategoryView:
         url = '/goals/goal_category/list'
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
+
+    def test_unlogin_category_list(self, client):
+        url = '/goals/goal_category/list'
+        response = client.get(url)
+        assert response.status_code == status.HTTP_403_FORBIDDEN

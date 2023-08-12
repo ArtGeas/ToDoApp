@@ -6,23 +6,6 @@ from rest_framework import status
 from core.models import User
 
 
-class LoginRequestFactory(factory.DictFactory):
-    username = factory.Faker('user_name')
-    password = factory.Faker('password')
-
-
-class BoardFactory(factory.DictFactory):
-    id = factory.Faker('random_int')
-    title = factory.Faker('word')
-    is_deleted = False
-
-
-class GoalFactory(factory.DictFactory):
-    title = factory.Faker('word')
-    is_deleted = False
-    board = BoardFactory.build().get('id')
-
-
 @pytest.mark.django_db()
 class TestGoalView:
 
@@ -30,3 +13,8 @@ class TestGoalView:
         url = '/goals/goal/list'
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
+
+    def test_unlogin_goal_list(self, client):
+        url = '/goals/goal/list'
+        response = client.get(url)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
