@@ -1,4 +1,3 @@
-## Project in progress yet
 
 # ToDoApp
 Todo App is a user-friendly web-app that helps you stay organized and manage your tasks effectively. Create an account or log in to access your personalized dashboard. From there, you can easily create tasks, set due dates, and assign priorities.
